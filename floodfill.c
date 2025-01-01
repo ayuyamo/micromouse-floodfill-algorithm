@@ -84,10 +84,10 @@ void reset_maze(int maze[16][16], bool ***walls, Coordinates *goals)
 Coordinates *get_neighbors(Coordinates coordinates, bool ***walls)
 {
     Coordinates map[] = {
-        {0, 1},   // UP
-        {0, -1},  // DOWN
-        {1, 0},   // RIGHT
-        {-1, 0}}; // LEFT
+        {0, 1},   // UP = NORTH
+        {1, 0},   // RIGHT = EAST
+        {0, -1},  // DOWN = SOUTH
+        {-1, 0}}; // LEFT = WEST
 
     int map_size = sizeof(map) / sizeof(map[0]);
     Coordinates *neighbors = malloc(map_size * sizeof(Coordinates));
@@ -115,7 +115,7 @@ Coordinates *get_neighbors(Coordinates coordinates, bool ***walls)
     return neighbors;
 }
 
-Action get_next_move(int **maze, Coordinates curr_pos, bool ***walls)
+Action get_next_move(int maze[16][16], Coordinates curr_pos, bool ***walls)
 {
     Coordinates neighbors[] = get_neighbors(curr_pos, walls);
     int num_neighbors = sizeof(neighbors) / sizeof(neighbors[0]);

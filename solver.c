@@ -30,8 +30,8 @@ Action floodFill(Coordinates *goal, Position curr_pos, int maze[16][16], bool **
     if (API_wallFront())
     {
         walls[curr_pos.coordinates.x][curr_pos.coordinates.y][curr_pos.direction] = true;
+        reset_maze(maze, walls, goal);
     }
-    reset_maze(maze, walls, goal);
     // mouse picks cells with smaller manhattan distance
     return get_next_move(maze, curr_pos.coordinates, walls);
 }

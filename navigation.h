@@ -32,6 +32,6 @@ Heading update_direction(Heading curr_direction, Action action);
 Position update_position(Position position);
 const char *direction_to_string(Heading dir);
 const char *action_to_string(Action action);
-Action map_coordinates_to_action(Coordinates coord);
-
+Action map_coordinates_to_action(Coordinates coord, Heading curr_direction);
+Heading get_opposite_direction(Heading curr_direction);
 #endif

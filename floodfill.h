@@ -2,12 +2,14 @@
 #define FLOODFILL_H
 
 #include "navigation.h"
+#include "dimensions.h"
 #include <stdbool.h>
 
-// void initialize_maze();
-void reset_maze(int maze[16][16], bool ***walls, Coordinates *goals);
-Coordinates *get_neighbors(Coordinates coordinates, bool ***walls);
-Action get_next_move(int maze[16][16], Coordinates curr_pos, bool ***walls);
+#define MAX_NEIGHBOR_WALLS 4
+
+void reset_maze(int maze[MAZE_ROWS][MAZE_COLS], bool ***walls, Coordinates *goals, int goal_size);
+Coordinates *get_neighbors(Coordinates coordinates, bool ***walls, int *num_neighbors);
+Action get_next_move(int maze[MAZE_ROWS][MAZE_COLS], Position curr_pos, bool ***walls);
 bool ***initialize_walls_arr();
 void deallocate_walls_arr(bool ***walls);
 #endif

@@ -67,14 +67,60 @@ const char *action_to_string(Action action)
     return actions[action];
 }
 
-Action map_coordinates_to_action(Coordinates coord)
+Action map_coordinates_to_action(Coordinates coord, Heading curr_direction)
 {
+    Heading cardinal_dir_of_next_pos;
     if (coord.x == 0 && coord.y == 1)
+        cardinal_dir_of_next_pos = NORTH;
+    else if (coord.x == 0 && coord.y == -1)
+        cardinal_dir_of_next_pos = SOUTH;
+    else if (coord.x == 1 && coord.y == 0)
+        cardinal_dir_of_next_pos = EAST;
+    else if (coord.x == -1 && coord.y == 0)
+        cardinal_dir_of_next_pos = WEST;
+
+    if (cardinal_dir_of_next_pos == curr_direction)
         return FORWARD;
-    // if (coord.x == 0 && coord.y == -1) return DOWN;
-    if (coord.x == 1 && coord.y == 0)
-        return RIGHT;
-    if (coord.x == -1 && coord.y == 0)
-        return LEFT;
+    else
+    {
+        switch (curr_direction)
+        {
+        case NORTH:
+            if (cardinal_dir_of_next_pos == EAST)
+                return RIGHT;
+            else if (cardinal_dir_of_next_pos == WEST)
+                return LEFT;
+        case SOUTH:
+            if (cardinal_dir_of_next_pos == EAST)
+                return LEFT;
+            else if (cardinal_dir_of_next_pos == WEST)
+                return RIGHT;
+        case WEST:
+            if (cardinal_dir_of_next_pos == NORTH)
+                return RIGHT;
+            else if (cardinal_dir_of_next_pos == SOUTH)
+                return LEFT;
+        case EAST:
+            if (cardinal_dir_of_next_pos == NORTH)
+                return LEFT;
+            else if (cardinal_dir_of_next_pos == SOUTH)
+                return RIGHT;
+        }
+    }
     return IDLE; // Invalid coordinate
+}
+
+Heading get_opposite_direction(Heading curr_direction)
+{
+    switch (curr_direction)
+    {
+    case NORTH:
+        return SOUTH;
+    case SOUTH:
+        return NORTH;
+    case EAST:
+        return WEST;
+    case WEST:
+        return EAST;
+    }
 }

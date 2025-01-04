@@ -57,6 +57,10 @@ int main(int argc, char *argv[])
         case RIGHT:
             API_turnRight();
             break;
+        case TURNBACK:
+            API_turnLeft();
+            API_turnLeft();
+            break;
         case IDLE:
             break;
         }

@@ -55,9 +55,9 @@ void reset_maze(int maze[MAZE_ROWS][MAZE_COLS], bool ***walls, Coordinates *goal
         Coordinates *neighbors = get_neighbors(curr_node->coordinates, walls, &num_neighbors);
         for (int i = 0; i < num_neighbors; i++)
         {
-            char curr_coords[50];
-            sprintf(curr_coords, "Currently at coords: (%d, %d)", neighbors[i].x, neighbors[i].y);
-            debug_log(curr_coords);
+            // char curr_coords[50];
+            // sprintf(curr_coords, "Currently at coords: (%d, %d)", neighbors[i].x, neighbors[i].y);
+            // debug_log(curr_coords);
             if ((!(text_set[neighbors[i].x][neighbors[i].y])) && (neighbors[i].x != -1) && (neighbors[i].y != -1))
             {
                 char manhattan_distance_str[20];
@@ -68,9 +68,9 @@ void reset_maze(int maze[MAZE_ROWS][MAZE_COLS], bool ***walls, Coordinates *goal
                 Node *new_node = initialize_node(neighbors[i].x, neighbors[i].y, curr_node->manhattan_distance + 1);
                 text_set[neighbors[i].x][neighbors[i].y] = true;
 
-                char node_info[50];
-                sprintf(node_info, "New node added: (%d, %d, %d) ", new_node->coordinates.x, new_node->coordinates.y, new_node->manhattan_distance);
-                debug_log(node_info);
+                // char node_info[50];
+                // sprintf(node_info, "New node added: (%d, %d, %d) ", new_node->coordinates.x, new_node->coordinates.y, new_node->manhattan_distance);
+                // debug_log(node_info);
                 enqueue(queue, new_node);
             }
         }
@@ -115,13 +115,15 @@ Action get_next_move(int maze[MAZE_ROWS][MAZE_COLS], Position curr_pos, bool ***
 {
     int num_neighbors;
     Coordinates *neighbors = get_neighbors(curr_pos.coordinates, walls, &num_neighbors);
-    // int num_neighbors = sizeof(neighbors) / sizeof(neighbors[0]);
     Coordinates next_pos;
     int min_dist = INT_MAX;
     for (int i = 0; i < num_neighbors; i++)
     {
         if ((neighbors[i].x != -1) && (neighbors[i].y != -1))
         {
+            char neighbor_buffer[50];
+            sprintf(neighbor_buffer, "neighbor: (%d, %d) -- manhattan distance: %d\n", neighbors[i].x, neighbors[i].y, maze[neighbors[i].x][neighbors[i].y]);
+            debug_log(neighbor_buffer);
             if (min_dist > maze[neighbors[i].x][neighbors[i].y])
             {
                 min_dist = maze[neighbors[i].x][neighbors[i].y];

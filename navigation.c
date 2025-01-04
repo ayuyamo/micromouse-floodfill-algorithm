@@ -9,24 +9,32 @@ Heading update_direction(Heading curr_direction, Action action)
             curr_direction = SOUTH;
         if (action == RIGHT)
             curr_direction = NORTH;
+        if (action == TURNBACK)
+            curr_direction = EAST;
         break;
     case NORTH:
         if (action == LEFT)
             curr_direction = WEST;
         if (action == RIGHT)
             curr_direction = EAST;
+        if (action == TURNBACK)
+            curr_direction = SOUTH;
         break;
     case EAST:
         if (action == LEFT)
             curr_direction = NORTH;
         if (action == RIGHT)
             curr_direction = SOUTH;
+        if (action == TURNBACK)
+            curr_direction = WEST;
         break;
     case SOUTH:
         if (action == LEFT)
             curr_direction = EAST;
         if (action == RIGHT)
             curr_direction = WEST;
+        if (action == TURNBACK)
+            curr_direction = NORTH;
         break;
     }
     return curr_direction;
@@ -62,7 +70,7 @@ const char *direction_to_string(Heading dir)
 const char *action_to_string(Action action)
 {
     static const char *actions[] = {
-        "LEFT", "FORWARD", "RIGHT", "IDLE"};
+        "LEFT", "FORWARD", "RIGHT", "TURNBACK", "IDLE"};
 
     return actions[action];
 }
@@ -90,21 +98,33 @@ Action map_coordinates_to_action(Coordinates coord, Heading curr_direction)
                 return RIGHT;
             else if (cardinal_dir_of_next_pos == WEST)
                 return LEFT;
+            else if (cardinal_dir_of_next_pos == SOUTH)
+                return TURNBACK;
+            break;
         case SOUTH:
             if (cardinal_dir_of_next_pos == EAST)
                 return LEFT;
             else if (cardinal_dir_of_next_pos == WEST)
                 return RIGHT;
+            else if (cardinal_dir_of_next_pos == NORTH)
+                return TURNBACK;
+            break;
         case WEST:
             if (cardinal_dir_of_next_pos == NORTH)
                 return RIGHT;
             else if (cardinal_dir_of_next_pos == SOUTH)
                 return LEFT;
+            else if (cardinal_dir_of_next_pos == EAST)
+                return TURNBACK;
+            break;
         case EAST:
             if (cardinal_dir_of_next_pos == NORTH)
                 return LEFT;
             else if (cardinal_dir_of_next_pos == SOUTH)
                 return RIGHT;
+            else if (cardinal_dir_of_next_pos == WEST)
+                return TURNBACK;
+            break;
         }
     }
     return IDLE; // Invalid coordinate

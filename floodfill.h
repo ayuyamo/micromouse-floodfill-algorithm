@@ -12,4 +12,5 @@ Coordinates *get_neighbors(Coordinates coordinates, bool ***walls, int *num_neig
 Action get_next_move(int maze[MAZE_ROWS][MAZE_COLS], Position curr_pos, bool ***walls);
 bool ***initialize_walls_arr();
 void deallocate_walls_arr(bool ***walls);
+void update_walls_info(Coordinates curr_location, Heading direction, bool ***walls);
 #endif

@@ -39,7 +39,7 @@ Heading update_direction(Heading curr_direction, Action action)
     }
     return curr_direction;
 }
-Position update_position(Position position)
+Position update_current_state(Position position)
 {
     // update coordinates
     switch (position.direction)
@@ -58,6 +58,27 @@ Position update_position(Position position)
     }
 
     return position;
+}
+
+Coordinates get_next_location(Coordinates curr_position, Heading curr_direction)
+{
+    // update coordinates
+    switch (curr_direction)
+    {
+    case WEST:
+        --curr_position.x;
+        break;
+    case NORTH:
+        ++curr_position.y;
+        break;
+    case EAST:
+        ++curr_position.x;
+        break;
+    case SOUTH:
+        --curr_position.y;
+    }
+
+    return curr_position;
 }
 
 const char *direction_to_string(Heading dir)

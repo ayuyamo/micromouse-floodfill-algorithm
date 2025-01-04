@@ -37,19 +37,24 @@ int main(int argc, char *argv[])
     bool ***walls = initialize_walls_arr();
     int maze[MAZE_ROWS][MAZE_COLS] = {0};
     bool reached_goal = false;
+    int num_of_turnbacks = 0;
     reset_maze(maze, walls, goal, goal_size);
     while (!reached_goal)
     {
         Action next_move = solver(goal, goal_size, curr_pos, maze, walls);
         char action_buffer[50];
         sprintf(action_buffer, "next action: %s\n", action_to_string(next_move));
+        if (strcmp(action_to_string(next_move), "TURNBACK") == 0)
+        {
+            ++num_of_turnbacks;
+        }
         debug_log(action_buffer);
         curr_pos.direction = update_direction(curr_pos.direction, next_move);
         switch (next_move)
         {
         case FORWARD:
             API_moveForward();
-            curr_pos = update_position(curr_pos);
+            curr_pos = update_current_state(curr_pos);
             break;
         case LEFT:
             API_turnLeft();
@@ -75,5 +80,13 @@ int main(int argc, char *argv[])
         reached_goal = goal_reached(curr_pos.coordinates, goal, goal_size);
     }
 
+    char turnback_buffer[50]; // Ensure the turnback_buffer is large enough
+
+    // Format the string
+    sprintf(turnback_buffer, "number of times mouse turn in opposite direction: %d\n", num_of_turnbacks);
+    debug_log(turnback_buffer);
+
     deallocate_walls_arr(walls);
+
+    return 0;
 }

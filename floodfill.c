@@ -174,3 +174,15 @@ void deallocate_walls_arr(bool ***walls)
     }
     free(walls);
 }
+
+void update_walls_info(Coordinates curr_location, Heading direction, bool ***walls)
+{
+    Position pos_separated_by_wall;
+    pos_separated_by_wall.coordinates = get_next_location(curr_location, direction);
+    pos_separated_by_wall.direction = get_opposite_direction(direction);
+    walls[curr_location.x][curr_location.y][direction] = true;
+    if (0 <= pos_separated_by_wall.coordinates.x && pos_separated_by_wall.coordinates.x < 16 && 0 <= pos_separated_by_wall.coordinates.y && pos_separated_by_wall.coordinates.y < 16)
+    {
+        walls[pos_separated_by_wall.coordinates.x][pos_separated_by_wall.coordinates.y][pos_separated_by_wall.direction] = true;
+    }
+}

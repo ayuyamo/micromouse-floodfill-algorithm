@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "solver.h"
 #include "API.h"
 #include "navigation.h"
 #include <stdbool.h>
@@ -41,7 +40,7 @@ int main(int argc, char *argv[])
     reset_maze(maze, walls, goal, goal_size);
     while (!reached_goal)
     {
-        Action next_move = solver(goal, goal_size, curr_pos, maze, walls);
+        Action next_move = floodFill(goal, goal_size, curr_pos, maze, walls);
         char action_buffer[50];
         sprintf(action_buffer, "next action: %s\n", action_to_string(next_move));
         if (strcmp(action_to_string(next_move), "TURNBACK") == 0)

@@ -186,3 +186,34 @@ void update_walls_info(Coordinates curr_location, Heading direction, bool ***wal
         walls[pos_separated_by_wall.coordinates.x][pos_separated_by_wall.coordinates.y][pos_separated_by_wall.direction] = true;
     }
 }
+
+// Put your implementation of floodfill here!
+Action floodFill(Coordinates *goal, int goal_size, Position curr_pos, int maze[MAZE_ROWS][MAZE_COLS], bool ***walls)
+{
+    //  if wall front --> save curr coords into not use list --> reset whole maze again
+    if (API_wallFront())
+    {
+        update_walls_info(curr_pos.coordinates, curr_pos.direction, walls);
+        reset_maze(maze, walls, goal, goal_size);
+        if (API_wallLeft())
+        {
+            Heading cardinal_directions_to_wall_left = update_direction(curr_pos.direction, LEFT);
+            update_walls_info(curr_pos.coordinates, cardinal_directions_to_wall_left, walls);
+            reset_maze(maze, walls, goal, goal_size);
+            return RIGHT;
+        }
+    }
+    if (API_wallLeft())
+    {
+        Heading cardinal_directions_to_wall_left = update_direction(curr_pos.direction, LEFT);
+        update_walls_info(curr_pos.coordinates, cardinal_directions_to_wall_left, walls);
+    }
+    if (API_wallRight())
+    {
+        Heading cardinal_directions_to_wall_right = update_direction(curr_pos.direction, RIGHT);
+        update_walls_info(curr_pos.coordinates, cardinal_directions_to_wall_right, walls);
+    }
+    reset_maze(maze, walls, goal, goal_size);
+    // mouse picks cells with smaller manhattan distance
+    return get_next_move(maze, curr_pos, walls);
+}

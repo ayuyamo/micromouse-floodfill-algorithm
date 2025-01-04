@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -g
 TARGET = maze_solver
 
 # Source and object files
-SRCS = main.c floodfill.c navigation.c queue.c solver.c API.c
+SRCS = main.c floodfill.c navigation.c queue.c API.c
 OBJS = $(SRCS:.c=.o)
 
 # Default target

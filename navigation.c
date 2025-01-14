@@ -39,26 +39,6 @@ Heading update_direction(Heading curr_direction, Action action)
     }
     return curr_direction;
 }
-Position update_current_state(Position position)
-{
-    // update coordinates
-    switch (position.direction)
-    {
-    case WEST:
-        --position.coordinates.x;
-        break;
-    case NORTH:
-        ++position.coordinates.y;
-        break;
-    case EAST:
-        ++position.coordinates.x;
-        break;
-    case SOUTH:
-        --position.coordinates.y;
-    }
-
-    return position;
-}
 
 Coordinates get_next_location(Coordinates curr_position, Heading curr_direction)
 {

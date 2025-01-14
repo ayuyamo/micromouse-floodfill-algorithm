@@ -30,7 +30,6 @@ typedef struct
 } Position;
 
 Heading update_direction(Heading curr_direction, Action action);
-Position update_current_state(Position position);
 Coordinates get_next_location(Coordinates curr_position, Heading curr_direction);
 const char *direction_to_string(Heading dir);
 const char *action_to_string(Action action);

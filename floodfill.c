@@ -4,7 +4,15 @@
 #include <string.h>
 #include <stdio.h>
 
-void reset_maze(int maze[MAZE_ROWS][MAZE_COLS], bool ***walls, Coordinates *goals, int goal_size)
+bool valid_position(int x, int y)
+{
+    if (0 <= x && x < MAZE_ROWS && 0 <= y && y < MAZE_COLS)
+    {
+        return true;
+    }
+    return false;
+}
+void reset_maze(int maze[MAZE_ROWS][MAZE_COLS], bool walls[MAZE_ROWS][MAZE_COLS][MAX_NEIGHBOR_WALLS], Coordinates *goals, int goal_size)
 {
     // Create a boolean 2D array to mark locations that are goals
     bool is_goal[MAZE_ROWS][MAZE_COLS] = {false};
@@ -89,7 +97,7 @@ void reset_maze(int maze[MAZE_ROWS][MAZE_COLS], bool ***walls, Coordinates *goal
     free(queue);
 }
 
-Coordinates *get_neighbors(Coordinates coordinates, bool ***walls, int *num_neighbors)
+Coordinates *get_neighbors(Coordinates coordinates, bool walls[MAZE_ROWS][MAZE_COLS][MAX_NEIGHBOR_WALLS], int *num_neighbors)
 {
     // Define the movement directions in terms of coordinate changes
     Coordinates map[] = {
@@ -114,7 +122,7 @@ Coordinates *get_neighbors(Coordinates coordinates, bool ***walls, int *num_neig
         coord_y = coordinates.y + map[i].y;
 
         // Check if the neighbor is within maze bounds and not blocked by a wall
-        if ((!walls[coordinates.x][coordinates.y][i]) && (0 <= coord_x && coord_x < MAZE_COLS) && (0 <= coord_y && coord_y < MAZE_ROWS))
+        if ((!walls[coordinates.x][coordinates.y][i]) && valid_position(coord_x, coord_y))
         {
             neighbors[i].x = coord_x;
             neighbors[i].y = coord_y;
@@ -128,7 +136,7 @@ Coordinates *get_neighbors(Coordinates coordinates, bool ***walls, int *num_neig
     return neighbors;
 }
 
-Action get_next_move(int maze[MAZE_ROWS][MAZE_COLS], Position curr_pos, bool ***walls)
+Action get_next_move(int maze[MAZE_ROWS][MAZE_COLS], Position curr_pos, bool walls[MAZE_ROWS][MAZE_COLS][MAX_NEIGHBOR_WALLS])
 {
     // Get the neighboring coordinates of the current position, along with the number of valid neighbors
     int num_neighbors;
@@ -166,42 +174,7 @@ Action get_next_move(int maze[MAZE_ROWS][MAZE_COLS], Position curr_pos, bool ***
     return map_coordinates_to_action(diff, curr_pos.direction);
 }
 
-bool ***initialize_walls_arr()
-{
-    // allocate space for each row of double pointers (x)
-    bool ***walls = (bool ***)malloc(MAZE_ROWS * sizeof(bool **));
-
-    for (int i = 0; i < MAZE_ROWS; i++)
-    { // allocate space for each entry (column) in each row (containing single pointer)
-        walls[i] = (bool **)malloc(MAZE_COLS * sizeof(bool *));
-        for (int j = 0; j < MAZE_COLS; j++)
-        { // allocate space for each entry in an array stored in each column
-            walls[i][j] = (bool *)malloc(MAX_NEIGHBOR_WALLS * sizeof(bool));
-
-            for (int k = 0; k < MAX_NEIGHBOR_WALLS; k++)
-            { // initialize each boolean entry inside an array within each entry inside outer 2d array to false
-                walls[i][j][k] = false;
-            }
-        }
-    }
-    return walls;
-}
-
-void deallocate_walls_arr(bool ***walls)
-{
-    // freeing dynamically allocated array for storing info about walls
-    for (int i = 0; i < MAZE_COLS; i++)
-    {
-        for (int j = 0; j < MAZE_ROWS; j++)
-        {
-            free(walls[i][j]);
-        }
-        free(walls[i]);
-    }
-    free(walls);
-}
-
-void update_walls_info(Coordinates curr_location, Heading direction, bool ***walls)
+void update_walls_info(Coordinates curr_location, Heading direction, bool walls[MAZE_ROWS][MAZE_COLS][MAX_NEIGHBOR_WALLS])
 {
     Position pos_separated_by_wall;
     pos_separated_by_wall.coordinates = get_next_location(curr_location, direction);
@@ -211,7 +184,7 @@ void update_walls_info(Coordinates curr_location, Heading direction, bool ***wal
     walls[curr_location.x][curr_location.y][direction] = true;
 
     // Ensure the new position (after the move) is within valid bounds of the maze (0 to 15 for both x and y coordinates)
-    if (0 <= pos_separated_by_wall.coordinates.x && pos_separated_by_wall.coordinates.x < 16 && 0 <= pos_separated_by_wall.coordinates.y && pos_separated_by_wall.coordinates.y < 16)
+    if (valid_position(pos_separated_by_wall.coordinates.x, pos_separated_by_wall.coordinates.y))
     {
         // Mark the wall at the new position and its direction (opposite of the current direction)
         walls[pos_separated_by_wall.coordinates.x][pos_separated_by_wall.coordinates.y][pos_separated_by_wall.direction] = true;
@@ -219,7 +192,7 @@ void update_walls_info(Coordinates curr_location, Heading direction, bool ***wal
 }
 
 // Put your implementation of floodfill here!
-Action floodFill(Coordinates *goal, int goal_size, Position curr_pos, int maze[MAZE_ROWS][MAZE_COLS], bool ***walls)
+Action floodFill(Coordinates *goal, int goal_size, Position curr_pos, int maze[MAZE_ROWS][MAZE_COLS], bool walls[MAZE_ROWS][MAZE_COLS][MAX_NEIGHBOR_WALLS])
 {
     // Every time a wall is detected, update locations where wall is found and reset the maze
     //  Case wall in front & enter corner

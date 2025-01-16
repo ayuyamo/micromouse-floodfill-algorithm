@@ -30,8 +30,8 @@ int main(int argc, char *argv[])
 
     int goal_size = sizeof(goal) / sizeof(goal[0]);
 
-    bool ***walls = initialize_walls_arr();
     int maze[MAZE_ROWS][MAZE_COLS] = {0};
+    bool walls[MAZE_ROWS][MAZE_COLS][MAX_NEIGHBOR_WALLS] = {false};
     bool reached_goal = false;
     reset_maze(maze, walls, goal, goal_size);
     while (!reached_goal)
@@ -70,8 +70,6 @@ int main(int argc, char *argv[])
         debug_log(buffer);
         reached_goal = goal_reached(curr_pos.coordinates, goal, goal_size);
     }
-
-    deallocate_walls_arr(walls);
 
     return 0;
 }
